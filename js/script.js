@@ -1,19 +1,99 @@
 
 
-const hour = new Date().getHours();
+// ===== Greeting with the visitor's saved name =====
 const greeting = document.getElementById("greeting");
+const nameForm = document.getElementById("name-form");
+const nameInput = document.getElementById("visitor-name");
+const nameError = document.getElementById("visitor-name-error");
+const changeNameButton = document.getElementById("change-name");
 
-if (hour < 12) {
-  greeting.textContent = "Good morning! Welcome to my portfolio.";
-} else if (hour < 18) {
-  greeting.textContent = "Good afternoon! Welcome to my portfolio.";
+// "Good morning", "Good afternoon", or "Good evening" based on the hour
+function getTimeGreeting() {
+  const hour = new Date().getHours();
+  if (hour < 12) {
+    return "Good morning";
+  } else if (hour < 18) {
+    return "Good afternoon";
+  }
+  return "Good evening";
+}
+
+// Shows the greeting. If a name is saved, the form is hidden
+// and a "Change name" button is shown instead.
+function showGreeting() {
+  const savedName = localStorage.getItem("visitorName");
+
+  if (savedName) {
+    greeting.textContent = getTimeGreeting() + ", " + savedName + "! Welcome to my portfolio.";
+    nameForm.hidden = true;
+    changeNameButton.hidden = false;
+  } else {
+    greeting.textContent = getTimeGreeting() + "! Welcome to my portfolio.";
+    nameForm.hidden = false;
+    changeNameButton.hidden = true;
+  }
+}
+
+nameForm.addEventListener("submit", function (event) {
+  event.preventDefault();
+  const name = nameInput.value.trim();
+
+  // letters (English or Arabic) and spaces only, 2 to 20 characters
+  if (!/^[\p{L} ]{2,20}$/u.test(name)) {
+    nameError.textContent = "Please enter 2 to 20 letters.";
+    return;
+  }
+
+  // also fill the name in the contact form, but only if the visitor
+  // has not typed a different name there
+  const contactName = document.getElementById("name");
+  const oldName = localStorage.getItem("visitorName") || "";
+  if (contactName.value === "" || contactName.value === oldName) {
+    contactName.value = name;
+  }
+
+  nameError.textContent = "";
+  localStorage.setItem("visitorName", name);
+  showGreeting();
+});
+
+changeNameButton.addEventListener("click", function () {
+  nameInput.value = localStorage.getItem("visitorName") || "";
+  nameForm.hidden = false;
+  changeNameButton.hidden = true;
+  nameInput.focus();
+});
+
+showGreeting();
+
+
+// ===== Visit counter (saved in localStorage) =====
+const visitMessage = document.getElementById("visit-message");
+const visitCount = Number(localStorage.getItem("visitCount") || 0) + 1;
+localStorage.setItem("visitCount", visitCount);
+
+// 1 -> "1st", 2 -> "2nd", 3 -> "3rd", 11 -> "11th", 22 -> "22nd"
+function toOrdinal(number) {
+  const lastTwo = number % 100;
+  if (lastTwo >= 11 && lastTwo <= 13) {
+    return number + "th";
+  }
+  const endings = { 1: "st", 2: "nd", 3: "rd" };
+  return number + (endings[number % 10] || "th");
+}
+
+if (visitCount === 1) {
+  visitMessage.textContent = "This is your first visit. Nice to meet you!";
 } else {
-  greeting.textContent = "Good evening! Welcome to my portfolio.";
+  visitMessage.textContent = "This is your " + toOrdinal(visitCount) + " visit. Thanks for coming back!";
 }
 
 
 const contactForm = document.getElementById("contact-form");
 const formMessage = document.getElementById("form-message");
+
+// start the contact form with the saved visitor name (if there is one)
+document.getElementById("name").value = localStorage.getItem("visitorName") || "";
 
 contactForm.addEventListener("submit", function (event) {
   event.preventDefault();

@@ -25,9 +25,21 @@
       <div class="container hero-content">
         <div>
           <p id="greeting">Welcome to my portfolio!</p>
+          <p id="visit-message" class="visit-message"></p>
           <h1>Hello, I'm Fahad Altuwayjiri</h1>
           <p>I am a university student learning web development.</p>
           <a class="button" href="#projects">See My Projects</a>
+
+          <!-- The visitor's name is saved in localStorage and used in the greeting -->
+          <form id="name-form" class="name-form" novalidate>
+            <label for="visitor-name">What should I call you?</label>
+            <div class="name-row">
+              <input type="text" id="visitor-name" maxlength="20" autocomplete="given-name" placeholder="Your first name">
+              <button type="submit">Save</button>
+            </div>
+            <p class="error" id="visitor-name-error"></p>
+          </form>
+          <button type="button" id="change-name" class="link-button" hidden>Change name</button>
         </div>
         <img src="assets/images/profile-placeholder.svg" alt="Profile placeholder">
       </div>

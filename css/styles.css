@@ -509,3 +509,64 @@ body.dark .level-message {
   font-family: "Courier New", monospace;
   font-weight: bold;
 }
+
+/* ===== Visitor name and visit message ===== */
+.visit-message {
+  margin: 0;
+  color: #555555;
+  font-size: 14px;
+}
+
+/* override the general form style used by the contact form */
+.name-form {
+  max-width: 360px;
+  margin-top: 25px;
+  padding: 0;
+  border: none;
+  background-color: transparent;
+}
+
+.name-form[hidden],
+.link-button[hidden] {
+  display: none;
+}
+
+.name-form label {
+  margin-top: 0;
+}
+
+.name-row {
+  display: flex;
+  gap: 8px;
+}
+
+.name-row button {
+  margin-top: 0;
+}
+
+.link-button {
+  margin-left: 12px;
+  padding: 0;
+  background-color: transparent;
+  color: #2f5da8;
+  text-decoration: underline;
+}
+
+.link-button:hover {
+  background-color: transparent;
+}
+
+body.dark .visit-message {
+  color: #aaaaaa;
+}
+
+body.dark .link-button {
+  color: #8db4ff;
+}
+
+@media (max-width: 700px) {
+  .name-form {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}

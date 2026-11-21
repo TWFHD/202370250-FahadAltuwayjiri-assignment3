@@ -570,3 +570,58 @@ body.dark .link-button {
     margin-right: auto;
   }
 }
+
+/* ===== Contact form extras ===== */
+.message-info {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.char-count {
+  margin: 4px 0 0;
+  color: #666666;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.char-count.near-limit {
+  color: #c0392b;
+  font-weight: bold;
+}
+
+.form-hint {
+  margin: 8px 0 0;
+  color: #666666;
+  font-size: 14px;
+}
+
+input[aria-invalid="true"],
+textarea[aria-invalid="true"] {
+  border-color: #c0392b;
+}
+
+button:disabled,
+button:disabled:hover {
+  background-color: #9aa9c4;
+  cursor: not-allowed;
+}
+
+body.dark .char-count,
+body.dark .form-hint {
+  color: #aaaaaa;
+}
+
+body.dark .char-count.near-limit {
+  color: #ff7b6b;
+}
+
+body.dark input[aria-invalid="true"],
+body.dark textarea[aria-invalid="true"] {
+  border-color: #ff7b6b;
+}
+
+body.dark button:disabled {
+  background-color: #33405a;
+  color: #888888;
+}

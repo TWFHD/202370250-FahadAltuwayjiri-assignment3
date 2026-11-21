@@ -89,55 +89,132 @@ if (visitCount === 1) {
 }
 
 
+// ===== Contact form with step-by-step validation =====
+// 1. Each field has its own rule that returns an error message ("" = valid).
+// 2. A field shows its error only after the visitor leaves it (or presses Send).
+// 3. The Send button stays disabled until every field is valid.
+// 4. On submit, the form is checked again, then a "Sending..." step is shown.
 const contactForm = document.getElementById("contact-form");
 const formMessage = document.getElementById("form-message");
+const formHint = document.getElementById("form-hint");
+const sendButton = document.getElementById("send-button");
+const messageCount = document.getElementById("message-count");
+const MESSAGE_MIN = 10;
+const MESSAGE_MAX = 500;
 
-// start the contact form with the saved visitor name (if there is one)
-document.getElementById("name").value = localStorage.getItem("visitorName") || "";
+// a simple email pattern: something@something.something (at least 2 letters at the end)
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+const formFields = {
+  name: function (value) {
+    if (value === "") return "Please enter your name.";
+    if (value.length < 2) return "Your name should be at least 2 characters.";
+    return "";
+  },
+  email: function (value) {
+    if (value === "") return "Please enter your email.";
+    if (!EMAIL_PATTERN.test(value)) return "Please enter a valid email, like name@example.com.";
+    return "";
+  },
+  message: function (value) {
+    if (value === "") return "Please write a message.";
+    if (value.length < MESSAGE_MIN) {
+      return "Your message needs " + (MESSAGE_MIN - value.length) + " more characters.";
+    }
+    return "";
+  }
+};
+
+// remembers which fields the visitor has already left, so errors
+// are not shown while they are still typing for the first time
+const touchedFields = {};
+
+function getFieldValue(fieldName) {
+  return document.getElementById(fieldName).value.trim();
+}
+
+// checks one field and (if it was touched) shows or clears its error
+function checkField(fieldName) {
+  const input = document.getElementById(fieldName);
+  const errorText = formFields[fieldName](getFieldValue(fieldName));
+
+  if (touchedFields[fieldName]) {
+    document.getElementById(fieldName + "-error").textContent = errorText;
+    input.setAttribute("aria-invalid", errorText !== "");
+  }
+  return errorText === "";
+}
+
+// checks all fields and turns the Send button on or off
+function updateFormState() {
+  let allValid = true;
+  Object.keys(formFields).forEach(function (fieldName) {
+    if (!checkField(fieldName)) {
+      allValid = false;
+    }
+  });
+
+  sendButton.disabled = !allValid;
+  formHint.hidden = allValid;
+  return allValid;
+}
+
+function updateMessageCount() {
+  const length = document.getElementById("message").value.length;
+  messageCount.textContent = length + " / " + MESSAGE_MAX;
+  messageCount.classList.toggle("near-limit", length > MESSAGE_MAX - 50);
+}
+
+Object.keys(formFields).forEach(function (fieldName) {
+  const input = document.getElementById(fieldName);
+
+  input.addEventListener("input", function () {
+    formMessage.classList.remove("show");
+    if (fieldName === "message") updateMessageCount();
+    updateFormState();
+  });
+
+  input.addEventListener("blur", function () {
+    touchedFields[fieldName] = true;
+    updateFormState();
+  });
+});
 
 contactForm.addEventListener("submit", function (event) {
   event.preventDefault();
 
-  const name = document.getElementById("name").value.trim();
-  const email = document.getElementById("email").value.trim();
-  const message = document.getElementById("message").value.trim();
+  // show every error, then check again before sending
+  Object.keys(formFields).forEach(function (fieldName) {
+    touchedFields[fieldName] = true;
+  });
+  if (!updateFormState()) return;
 
-  const nameError = document.getElementById("name-error");
-  const emailError = document.getElementById("email-error");
-  const messageError = document.getElementById("message-error");
+  const name = getFieldValue("name");
 
-  nameError.textContent = "";
-  emailError.textContent = "";
-  messageError.textContent = "";
-  formMessage.textContent = "";
-  formMessage.classList.remove("show");
+  // simulate sending (there is no real server)
+  sendButton.disabled = true;
+  sendButton.textContent = "Sending...";
 
-  let valid = true;
-
-  if (name === "") {
-    nameError.textContent = "Please enter your name.";
-    valid = false;
-  }
-
-  if (email === "") {
-    emailError.textContent = "Please enter your email.";
-    valid = false;
-  } else if (!email.includes("@") || !email.includes(".")) {
-    emailError.textContent = "Please enter a valid email, like name@example.com.";
-    valid = false;
-  }
-
-  if (message.length < 10) {
-    messageError.textContent = "Your message should be at least 10 characters.";
-    valid = false;
-  }
-
-  if (valid) {
+  setTimeout(function () {
     formMessage.textContent = "Thank you, " + name + "! Your message has been received.";
     formMessage.classList.add("show");
+    sendButton.textContent = "Send";
+
+    // start again with an empty form (but keep the saved visitor name)
     contactForm.reset();
-  }
+    Object.keys(formFields).forEach(function (fieldName) {
+      touchedFields[fieldName] = false;
+      document.getElementById(fieldName).removeAttribute("aria-invalid");
+    });
+    document.getElementById("name").value = localStorage.getItem("visitorName") || "";
+    updateMessageCount();
+    updateFormState();
+  }, 1000);
 });
+
+// start the contact form with the saved visitor name (if there is one)
+document.getElementById("name").value = localStorage.getItem("visitorName") || "";
+updateFormState();
 
 
 document.getElementById("year").textContent = new Date().getFullYear();

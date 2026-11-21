@@ -148,19 +148,23 @@
 
       <form id="contact-form" novalidate>
         <label for="name">Name</label>
-        <input type="text" id="name" name="name">
+        <input type="text" id="name" name="name" autocomplete="name" aria-describedby="name-error">
         <p class="error" id="name-error"></p>
 
         <label for="email">Email</label>
-        <input type="email" id="email" name="email">
+        <input type="email" id="email" name="email" autocomplete="email" aria-describedby="email-error">
         <p class="error" id="email-error"></p>
 
         <label for="message">Message</label>
-        <textarea id="message" name="message" rows="5"></textarea>
-        <p class="error" id="message-error"></p>
+        <textarea id="message" name="message" rows="5" maxlength="500" aria-describedby="message-error message-count"></textarea>
+        <div class="message-info">
+          <p class="error" id="message-error"></p>
+          <p id="message-count" class="char-count">0 / 500</p>
+        </div>
 
-        <button type="submit">Send</button>
-        <p id="form-message"></p>
+        <button type="submit" id="send-button" disabled>Send</button>
+        <p id="form-hint" class="form-hint" aria-live="polite">Fill in all fields correctly to enable the Send button.</p>
+        <p id="form-message" aria-live="polite"></p>
       </form>
     </section>
   </main>

@@ -57,6 +57,16 @@
     <section id="projects" class="projects-section section">
       <div class="container fade-in">
         <h2>My Projects</h2>
+
+        <!-- The visitor picks a level; the message and the projects change with it -->
+        <fieldset class="level-picker">
+          <legend>What is your experience level?</legend>
+          <label><input type="radio" name="level" value="all" checked> Show everything</label>
+          <label><input type="radio" name="level" value="beginner"> Beginner</label>
+          <label><input type="radio" name="level" value="advanced"> Advanced</label>
+        </fieldset>
+        <p id="level-message" class="level-message" aria-live="polite"></p>
+
         <div class="project-controls">
           <input type="search" id="project-search" placeholder="Search projects..." aria-label="Search projects">
           <div class="filter-buttons">
@@ -73,38 +83,42 @@
         </div>
         <div class="project-list">
           <!-- data-date (YYYY-MM) is used for sorting by date -->
-          <article class="project-card" data-category="web" data-date="2026-09">
+          <article class="project-card" data-category="web" data-level="advanced" data-date="2026-09">
             <img src="assets/images/classroom-reservation.webp" alt="Classroom Reservation screens" width="960" height="600" loading="lazy">
             <h3>Classroom Reservation</h3>
+            <span class="level-badge advanced">Advanced</span>
             <p class="project-date">September 2026</p>
             <p>A system that allows students to search for available university classrooms and reserve unused rooms by date and time.</p>
           </article>
 
-          <article class="project-card" data-category="mobile" data-date="2025-10">
+          <article class="project-card" data-category="mobile" data-level="advanced" data-date="2025-10">
             <img src="assets/images/unibus-project.webp" alt="UNIBus app screens" width="960" height="600" loading="lazy">
             <h3>UNIBus</h3>
+            <span class="level-badge advanced">Advanced</span>
             <p class="project-date">October 2025</p>
             <p>A university bus tracking system that helps students view bus schedules, reserve trips, and manage their bus requests. The application aims to make campus transportation easier and more organized for university students.</p>
           </article>
 
-          <article class="project-card" data-category="web" data-date="2026-09">
+          <article class="project-card" data-category="web" data-level="beginner" data-date="2026-09">
             <img src="assets/images/portfolio-v1.svg" alt="Sketch of the first portfolio page" width="480" height="300" loading="lazy">
             <h3>Personal Portfolio v1</h3>
+            <span class="level-badge beginner">Beginner</span>
             <p class="project-date">September 2026</p>
             <p>My first website: a responsive one-page portfolio built with only HTML and CSS.</p>
             <a href="https://github.com/TWFHD/202370250-FahadAltuwayjiri-assignment1" target="_blank" rel="noopener">View on GitHub</a>
           </article>
 
-          <article class="project-card" data-category="web" data-date="2026-10">
+          <article class="project-card" data-category="web" data-level="beginner" data-date="2026-10">
             <img src="assets/images/portfolio-v2.svg" alt="Sketch of the interactive portfolio in dark mode" width="480" height="300" loading="lazy">
             <h3>Interactive Portfolio v2</h3>
+            <span class="level-badge beginner">Beginner</span>
             <p class="project-date">October 2026</p>
             <p>The second version of my portfolio with JavaScript: project filter and search, dark mode, form validation, and the GitHub API.</p>
             <a href="https://github.com/TWFHD/202370250-FahadAltuwayjiri-assignment2" target="_blank" rel="noopener">View on GitHub</a>
           </article>
         </div>
         <p id="no-results" class="empty-state" hidden>
-          No projects found. Try another word or choose "All".
+          No projects found. Try another word, category, or level.
         </p>
       </div>
     </section>

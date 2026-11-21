@@ -69,7 +69,17 @@ const projectCards = document.querySelectorAll(".project-card");
 const noResults = document.getElementById("no-results");
 const sortSelect = document.getElementById("project-sort");
 const projectList = document.querySelector(".project-list");
+const levelRadios = document.querySelectorAll('input[name="level"]');
+const levelMessage = document.getElementById("level-message");
 let currentFilter = "all";
+let currentLevel = "all";
+
+// a different message for each level the visitor can choose
+const levelMessages = {
+  all: "Showing all my projects. Choose a level to see the projects that match your experience.",
+  beginner: "Beginner projects: simple websites made with HTML, CSS, and JavaScript. A good place to start if you are new to web development.",
+  advanced: "Advanced projects: bigger team projects with logins, reservations, and saved data. These show more complex work."
+};
 
 // ===== Sort projects =====
 // Puts the cards in a new order (newest, oldest, or by name)
@@ -110,8 +120,11 @@ function updateProjects() {
 
   projectCards.forEach(function (card) {
     const matchesFilter = currentFilter === "all" || card.dataset.category === currentFilter;
+    const matchesLevel = currentLevel === "all" || card.dataset.level === currentLevel;
     const matchesSearch = card.textContent.toLowerCase().includes(searchText);
-    const show = matchesFilter && matchesSearch;
+
+    // a card is shown only if it passes all three checks
+    const show = matchesFilter && matchesLevel && matchesSearch;
 
     card.hidden = !show;
     if (show) visibleCount++;
@@ -135,6 +148,19 @@ filterButtons.forEach(function (button) {
 
 searchInput.addEventListener("input", updateProjects);
 sortSelect.addEventListener("change", updateProjects);
+
+// ===== Level choice (Beginner / Advanced) =====
+// When the visitor picks a level, change the message and the visible projects.
+levelRadios.forEach(function (radio) {
+  radio.addEventListener("change", function () {
+    currentLevel = radio.value;
+    levelMessage.textContent = levelMessages[currentLevel];
+    levelMessage.className = "level-message " + currentLevel;
+    updateProjects();
+  });
+});
+
+levelMessage.textContent = levelMessages.all;
 
 // show the projects in the default order (newest first) when the page opens
 updateProjects();

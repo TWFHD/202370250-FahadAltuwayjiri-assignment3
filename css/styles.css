@@ -404,7 +404,7 @@ nav a {
 }
 /* ===== Project date and link ===== */
 .project-date {
-  margin-top: -8px;
+  margin: 0 0 8px;
   color: #666666;
   font-size: 14px;
 }
@@ -426,4 +426,74 @@ body.dark #project-sort {
   border-color: #33405a;
   background-color: #121826;
   color: #e4e4e4;
+}
+
+/* ===== Level picker and badges ===== */
+.level-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  margin: 0 0 10px;
+  padding: 12px 16px;
+  border: 1px solid #cccccc;
+  border-radius: 8px;
+}
+
+.level-picker legend {
+  padding: 0 6px;
+  font-weight: bold;
+}
+
+.level-picker label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-weight: normal;
+  cursor: pointer;
+}
+
+.level-picker input {
+  width: auto;
+}
+
+.level-message {
+  margin: 0 0 20px;
+  padding: 10px 14px;
+  border-left: 4px solid #2f5da8;
+  background-color: #ffffff;
+}
+
+.level-message.beginner {
+  border-left-color: #2e8b57;
+}
+
+.level-message.advanced {
+  border-left-color: #c0392b;
+}
+
+.level-badge {
+  display: inline-block;
+  margin-bottom: 10px;
+  padding: 2px 10px;
+  border-radius: 12px;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.level-badge.beginner {
+  background-color: #2e8b57;
+}
+
+.level-badge.advanced {
+  background-color: #c0392b;
+}
+
+body.dark .level-picker {
+  border-color: #33405a;
+}
+
+body.dark .level-message {
+  background-color: #222c40;
 }

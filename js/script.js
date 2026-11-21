@@ -394,43 +394,143 @@ themeButton.addEventListener("click", function () {
 
 
 
+// ===== GitHub repositories (GitHub REST API) =====
+// Steps: 1) use the saved copy if it is fresh, 2) otherwise fetch from GitHub
+// with a time limit, 3) show the repositories, or a clear error with "Try again".
+const GITHUB_USER = "TWFHD";
+const REPOS_URL = "https://api.github.com/users/" + GITHUB_USER + "/repos?sort=updated&per_page=10";
+const REPOS_CACHE_KEY = "githubRepos";
+const CACHE_MINUTES = 10;      // GitHub allows only 60 requests per hour without login
+const REQUEST_TIMEOUT = 8000;  // stop waiting after 8 seconds
+
 const repoList = document.getElementById("repo-list");
 const repoStatus = document.getElementById("repo-status");
+const repoRetry = document.getElementById("repo-retry");
 
-fetch("https://api.github.com/users/TWFHD/repos?sort=updated&per_page=5")
-  .then(function (response) {
-    if (!response.ok) {
-      throw new Error("Request failed");
-    }
-    return response.json();
-  })
-  .then(function (repos) {
-    if (repos.length === 0) {
-      repoStatus.textContent = "No repositories to show yet.";
-      return;
-    }
+// returns the saved repositories if they are newer than CACHE_MINUTES, otherwise null
+function getCachedRepos() {
+  const saved = JSON.parse(sessionStorage.getItem(REPOS_CACHE_KEY) || "null");
+  if (saved && Date.now() - saved.time < CACHE_MINUTES * 60 * 1000) {
+    return saved.repos;
+  }
+  return null;
+}
 
-    repoStatus.textContent = "";
+// "3 days ago", "2 months ago", ... using the browser's built-in formatter
+function timeAgo(dateText) {
+  const seconds = (new Date(dateText) - Date.now()) / 1000;
+  const units = [["year", 31536000], ["month", 2592000], ["day", 86400], ["hour", 3600], ["minute", 60]];
+  const formatter = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
 
-    for (let i = 0; i < repos.length; i++) {
-      const li = document.createElement("li");
-      const link = document.createElement("a");
-      link.href = repos[i].html_url;
-      link.target = "_blank";
-      link.textContent = repos[i].name;
-      li.appendChild(link);
-      repoList.appendChild(li);
+  for (const [unit, unitSeconds] of units) {
+    if (Math.abs(seconds) >= unitSeconds) {
+      return formatter.format(Math.round(seconds / unitSeconds), unit);
     }
-  })
-  .catch(function () {
-    repoStatus.textContent = "Sorry, the repositories could not be loaded. Please check your internet connection and refresh the page.";
-    repoStatus.classList.add("error");
+  }
+  return "just now";
+}
+
+// builds one repository card (textContent is used so the data is never treated as HTML)
+function createRepoItem(repo) {
+  const li = document.createElement("li");
+
+  const link = document.createElement("a");
+  link.href = repo.html_url;
+  link.target = "_blank";
+  link.rel = "noopener";
+  link.textContent = repo.name;
+
+  const description = document.createElement("p");
+  description.className = "repo-description";
+  description.textContent = repo.description || "No description yet.";
+
+  const details = [];
+  if (repo.language) details.push(repo.language);
+  details.push("★ " + repo.stargazers_count);
+  details.push("Updated " + timeAgo(repo.pushed_at));
+
+  const meta = document.createElement("p");
+  meta.className = "repo-meta";
+  meta.textContent = details.join("  •  ");
+
+  li.append(link, description, meta);
+  return li;
+}
+
+function showRepos(repos) {
+  // forks are other people's projects, so they are not shown
+  const ownRepos = repos.filter(function (repo) {
+    return !repo.fork;
+  }).slice(0, 6);
+
+  repoList.innerHTML = "";
+
+  if (ownRepos.length === 0) {
+    repoStatus.textContent = "No repositories to show yet.";
+    return;
+  }
+
+  repoStatus.textContent = "Showing my " + ownRepos.length + " most recently updated repositories.";
+  ownRepos.forEach(function (repo) {
+    repoList.appendChild(createRepoItem(repo));
   });
+}
 
+// picks a helpful message for each kind of problem
+function getErrorMessage(error) {
+  if (!navigator.onLine) {
+    return "You seem to be offline. Please check your internet connection.";
+  }
+  if (error.name === "AbortError") {
+    return "GitHub is taking too long to answer. Please try again.";
+  }
+  if (error.status === 403 || error.status === 429) {
+    return "GitHub's request limit was reached. Please try again in a few minutes.";
+  }
+  return "Sorry, the repositories could not be loaded right now.";
+}
 
+async function loadRepos() {
+  repoRetry.hidden = true;
+  repoStatus.classList.remove("error");
 
+  const cached = getCachedRepos();
+  if (cached) {
+    showRepos(cached);
+    return;
+  }
 
+  repoStatus.textContent = "Loading repositories...";
 
+  // AbortController cancels the request if it takes longer than REQUEST_TIMEOUT
+  const controller = new AbortController();
+  const timer = setTimeout(function () {
+    controller.abort();
+  }, REQUEST_TIMEOUT);
+
+  try {
+    const response = await fetch(REPOS_URL, { signal: controller.signal });
+    if (!response.ok) {
+      const error = new Error("GitHub request failed");
+      error.status = response.status;
+      throw error;
+    }
+
+    const repos = await response.json();
+    sessionStorage.setItem(REPOS_CACHE_KEY, JSON.stringify({ time: Date.now(), repos: repos }));
+    showRepos(repos);
+  } catch (error) {
+    repoList.innerHTML = "";
+    repoStatus.textContent = getErrorMessage(error);
+    repoStatus.classList.add("error");
+    repoRetry.hidden = false;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+repoRetry.addEventListener("click", loadRepos);
+loadRepos();
 
 
 const fadeSections = document.querySelectorAll(".fade-in");

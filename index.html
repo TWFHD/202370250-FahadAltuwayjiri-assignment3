@@ -137,8 +137,10 @@
 
     <section id="github" class="container section fade-in">
       <h2>My Latest GitHub Repositories</h2>
-      <p>This list is loaded from the GitHub API.</p>
-      <p id="repo-status">Loading...</p>
+      <p>This list is loaded live from the GitHub API, so it is always up to date.
+        <a href="https://github.com/TWFHD" target="_blank" rel="noopener">See my GitHub profile</a></p>
+      <p id="repo-status" aria-live="polite">Loading repositories...</p>
+      <button type="button" id="repo-retry" hidden>Try again</button>
       <ul id="repo-list" class="repo-list"></ul>
     </section>
 

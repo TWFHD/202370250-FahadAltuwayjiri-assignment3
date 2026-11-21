@@ -497,3 +497,15 @@ body.dark .level-picker {
 body.dark .level-message {
   background-color: #222c40;
 }
+
+/* ===== Time on site timer ===== */
+.timer {
+  margin: 4px 0 0;
+  font-size: 14px;
+  opacity: 0.85;
+}
+
+#time-on-site {
+  font-family: "Courier New", monospace;
+  font-weight: bold;
+}

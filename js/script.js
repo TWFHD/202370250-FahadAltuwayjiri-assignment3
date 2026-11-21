@@ -63,6 +63,54 @@ contactForm.addEventListener("submit", function (event) {
 document.getElementById("year").textContent = new Date().getFullYear();
 
 
+// ===== Time on site timer =====
+// Counts only the time the visitor is really looking at the page:
+// the timer pauses when the tab is hidden and continues when it comes back.
+const timerDisplay = document.getElementById("time-on-site");
+let savedSeconds = 0;          // time collected before the last pause
+let startTime = Date.now();    // when the current visible period started
+
+// turns a number of seconds into "MM:SS" or "H:MM:SS"
+function formatTime(totalSeconds) {
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+  const mm = String(minutes).padStart(2, "0");
+  const ss = String(seconds).padStart(2, "0");
+
+  if (hours > 0) {
+    return hours + ":" + mm + ":" + ss;
+  }
+  return mm + ":" + ss;
+}
+
+function getSecondsOnPage() {
+  if (startTime === null) {
+    return savedSeconds; // paused
+  }
+  return savedSeconds + Math.floor((Date.now() - startTime) / 1000);
+}
+
+function updateTimer() {
+  timerDisplay.textContent = formatTime(getSecondsOnPage());
+}
+
+document.addEventListener("visibilitychange", function () {
+  if (document.hidden) {
+    // pause: keep the time so far and stop counting
+    savedSeconds = getSecondsOnPage();
+    startTime = null;
+  } else {
+    // continue counting from now
+    startTime = Date.now();
+  }
+});
+
+// Date.now() is used instead of adding 1 every second,
+// because setInterval can run late and the time would drift.
+setInterval(updateTimer, 1000);
+
+
 const searchInput = document.getElementById("project-search");
 const filterButtons = document.querySelectorAll(".filter-btn");
 const projectCards = document.querySelectorAll(".project-card");

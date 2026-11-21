@@ -1,1 +1,16 @@
+# Operating system files
+.DS_Store
+Thumbs.db
 
+# Editor settings
+.vscode/
+.idea/
+
+# AI evidence must be submitted on Blackboard, not committed
+*.zip
+ai-evidence/
+conversations/
+artifacts/
+
+# Local tool settings
+.claude/

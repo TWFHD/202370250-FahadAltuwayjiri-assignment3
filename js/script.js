@@ -67,11 +67,46 @@ const searchInput = document.getElementById("project-search");
 const filterButtons = document.querySelectorAll(".filter-btn");
 const projectCards = document.querySelectorAll(".project-card");
 const noResults = document.getElementById("no-results");
+const sortSelect = document.getElementById("project-sort");
+const projectList = document.querySelector(".project-list");
 let currentFilter = "all";
+
+// ===== Sort projects =====
+// Puts the cards in a new order (newest, oldest, or by name)
+// by moving each card to the end of the list in the sorted order.
+function sortProjects() {
+  const sortBy = sortSelect.value;
+  const cards = Array.from(projectCards);
+
+  cards.sort(function (a, b) {
+    const nameA = a.querySelector("h3").textContent;
+    const nameB = b.querySelector("h3").textContent;
+
+    if (sortBy === "name") {
+      return nameA.localeCompare(nameB);
+    }
+
+    // dates are written as "YYYY-MM", so comparing them as text works
+    const dateCompare = a.dataset.date.localeCompare(b.dataset.date);
+
+    // if two projects have the same date, sort them by name
+    if (dateCompare === 0) {
+      return nameA.localeCompare(nameB);
+    }
+
+    return sortBy === "newest" ? -dateCompare : dateCompare;
+  });
+
+  cards.forEach(function (card) {
+    projectList.appendChild(card);
+  });
+}
 
 function updateProjects() {
   const searchText = searchInput.value.trim().toLowerCase();
   let visibleCount = 0;
+
+  sortProjects();
 
   projectCards.forEach(function (card) {
     const matchesFilter = currentFilter === "all" || card.dataset.category === currentFilter;
@@ -99,6 +134,10 @@ filterButtons.forEach(function (button) {
 });
 
 searchInput.addEventListener("input", updateProjects);
+sortSelect.addEventListener("change", updateProjects);
+
+// show the projects in the default order (newest first) when the page opens
+updateProjects();
 
 
 // ===== Dark mode (saved in localStorage) =====

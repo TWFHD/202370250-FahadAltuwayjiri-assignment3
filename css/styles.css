@@ -235,6 +235,8 @@ footer {
 .project-controls { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; }
 #project-search { flex: 1; min-width: 200px; padding: 10px; border: 1px solid #ccc; border-radius: 8px; }
 .filter-buttons { display: flex; gap: 8px; }
+.sort-label { align-self: center; font-weight: bold; margin: 0; }
+#project-sort { padding: 10px; border: 1px solid #ccc; border-radius: 8px; font-family: Arial, sans-serif; }
 .filter-btn { background: transparent; color: inherit; border: 1px solid #ccc; }
 .filter-btn.active { background: #333; color: #fff; }
 .project-card[hidden] { display: none; }
@@ -399,4 +401,29 @@ nav a {
 .fade-in.visible {
   opacity: 1;
   transform: translateY(0);
+}
+/* ===== Project date and link ===== */
+.project-date {
+  margin-top: -8px;
+  color: #666666;
+  font-size: 14px;
+}
+
+.project-card a {
+  color: #2f5da8;
+  font-weight: bold;
+}
+
+body.dark .project-date {
+  color: #aaaaaa;
+}
+
+body.dark .project-card a {
+  color: #8db4ff;
+}
+
+body.dark #project-sort {
+  border-color: #33405a;
+  background-color: #121826;
+  color: #e4e4e4;
 }

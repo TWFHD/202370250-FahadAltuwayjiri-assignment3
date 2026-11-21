@@ -3,24 +3,47 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Portfolio of Fahad Altuwayjiri, a Computer Science student at KFUPM: projects, GitHub repositories, and contact form.">
+  <meta name="theme-color" content="#2f5da8">
   <title>Fahad's Portfolio</title>
+  <link rel="icon" href="assets/images/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://api.github.com" crossorigin>
   <link rel="stylesheet" href="css/styles.css">
+
+  <!-- Runs before the page is drawn: applies the saved theme (no white flash)
+       and adds the "js" class used by the fade-in animation. -->
+  <script>
+    (function () {
+      var root = document.documentElement;
+      root.classList.add("js");
+      try {
+        var saved = localStorage.getItem("theme");
+        var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        if (saved === "dark" || (!saved && prefersDark)) {
+          root.setAttribute("data-theme", "dark");
+        }
+      } catch (error) {
+        // storage blocked: keep the light theme
+      }
+    })();
+  </script>
+  <script src="js/script.js" defer></script>
 </head>
 <body>
   <header>
-    <nav class="container">
-      <h2>Fahad's Portfolio</h2>
+    <nav class="container" aria-label="Main">
+      <a class="logo" href="#top">Fahad's Portfolio</a>
       <ul>
         <li><a href="#about">About</a></li>
         <li><a href="#projects">Projects</a></li>
         <li><a href="#github">GitHub</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
-      <button id="theme-toggle" type="button">Dark Mode</button>
+      <button id="theme-toggle" type="button" aria-pressed="false">Dark Mode</button>
     </nav>
   </header>
 
-  <main>
+  <main id="top">
     <section class="hero">
       <div class="container hero-content">
         <div>
@@ -41,7 +64,7 @@
           </form>
           <button type="button" id="change-name" class="link-button" hidden>Change name</button>
         </div>
-        <img src="assets/images/profile-placeholder.svg" alt="Profile placeholder">
+        <img src="assets/images/profile-placeholder.svg" alt="Profile placeholder" width="280" height="280">
       </div>
     </section>
 
@@ -51,8 +74,8 @@
 
       <h3>My Skills</h3>
       <ul class="skills">
-        <li>PYTHON</li>
-        <li>JAVA</li>
+        <li>Python</li>
+        <li>Java</li>
         <li>HTML</li>
         <li>CSS</li>
         <li>JavaScript</li>
@@ -82,9 +105,9 @@
         <div class="project-controls">
           <input type="search" id="project-search" placeholder="Search projects..." aria-label="Search projects">
           <div class="filter-buttons">
-            <button class="filter-btn active" data-filter="all" aria-pressed="true">All</button>
-            <button class="filter-btn" data-filter="web" aria-pressed="false">Web</button>
-            <button class="filter-btn" data-filter="mobile" aria-pressed="false">Mobile</button>
+            <button type="button" class="filter-btn active" data-filter="all" aria-pressed="true">All</button>
+            <button type="button" class="filter-btn" data-filter="web" aria-pressed="false">Web</button>
+            <button type="button" class="filter-btn" data-filter="mobile" aria-pressed="false">Mobile</button>
           </div>
           <label class="sort-label" for="project-sort">Sort by</label>
           <select id="project-sort">
@@ -175,7 +198,5 @@
     <p>&copy; <span id="year"></span> Fahad Altuwayjiri</p>
     <p class="timer">You have been on this page for <span id="time-on-site">00:00</span></p>
   </footer>
-
-  <script src="js/script.js"></script>
 </body>
 </html>

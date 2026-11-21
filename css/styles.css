@@ -1,9 +1,69 @@
+/*
+ * Fahad's Portfolio – styles
+ *
+ * All colors are CSS variables. Dark mode only changes the variables
+ * (see [data-theme="dark"]), so no rule has to be written twice.
+ *
+ * Sections: 1. Colors  2. Base  3. Header  4. Hero  5. Sections and About
+ *           6. Projects  7. GitHub  8. Forms  9. Footer  10. Animations
+ *           11. Responsive
+ */
 
 
+/* ===== 1. Colors ===== */
+:root {
+  --bg: #ffffff;
+  --text: #222222;
+  --muted: #666666;
+  --primary: #2f5da8;        /* headings, links, borders */
+  --on-primary: #ffffff;     /* text on a --primary background */
+  --button: #2f5da8;
+  --button-hover: #21457f;
+  --button-disabled: #9aa9c4;
+  --header: #2f5da8;
+  --hero: #eef4ff;
+  --section-alt: #f5f7fa;    /* background of the projects section */
+  --surface: #f5f7fa;        /* info boxes, repo cards, forms */
+  --card: #ffffff;
+  --chip: #dfe9fa;
+  --border: #dddddd;
+  --input-bg: #ffffff;
+  --input-border: #bbbbbb;
+  --error: #c0392b;
+  --success: #1e7e34;
+  --beginner: #2e8b57;
+  --advanced: #c0392b;
+  --shadow: rgba(0, 0, 0, 0.12);
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  --bg: #121826;
+  --text: #e4e4e4;
+  --muted: #aaaaaa;
+  --primary: #8db4ff;
+  --on-primary: #121826;
+  --button-disabled: #33405a;
+  --header: #0b1020;
+  --hero: #1b2333;
+  --section-alt: #1b2333;
+  --surface: #222c40;
+  --card: #222c40;
+  --chip: #33405a;
+  --border: #33405a;
+  --input-bg: #121826;
+  --input-border: #33405a;
+  --error: #ff7b6b;
+  --success: #6ee28c;
+  --shadow: rgba(0, 0, 0, 0.4);
+  color-scheme: dark;
+}
+
+
+/* ===== 2. Base ===== */
 * {
   box-sizing: border-box;
 }
-
 
 html {
   scroll-behavior: smooth;
@@ -11,13 +71,20 @@ html {
 
 body {
   margin: 0;
-  background-color: #ffffff;
-  color: #222222;
-  font-family: Arial, sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: Arial, Helvetica, sans-serif;
   line-height: 1.6;
 }
 
+img {
+  max-width: 100%;
+  height: auto;
+}
 
+a {
+  color: var(--primary);
+}
 
 .container {
   width: 90%;
@@ -25,20 +92,63 @@ body {
   margin: auto;
 }
 
+.button,
+button {
+  display: inline-block;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 5px;
+  background-color: var(--button);
+  color: #ffffff;
+  font: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.button:hover,
+button:hover {
+  background-color: var(--button-hover);
+}
+
+button:disabled,
+button:disabled:hover {
+  background-color: var(--button-disabled);
+  color: var(--muted);
+  cursor: not-allowed;
+}
+
+/* elements with the "hidden" attribute must stay hidden,
+   even when another rule gives them a display value */
+[hidden] {
+  display: none !important;
+}
+
+:focus-visible {
+  outline: 3px solid var(--primary);
+  outline-offset: 2px;
+}
+
+
+/* ===== 3. Header ===== */
 header {
-  background-color: #2f5da8;
-  color: white;
+  background-color: var(--header);
+  color: #ffffff;
 }
 
 nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 15px;
   padding: 15px 0;
 }
 
-nav h2 {
-  margin: 0;
+.logo {
+  color: #ffffff;
+  font-size: 24px;
+  font-weight: bold;
+  text-decoration: none;
 }
 
 nav ul {
@@ -50,17 +160,29 @@ nav ul {
 }
 
 nav a {
-  color: white;
+  color: #ffffff;
   text-decoration: none;
+  transition: color 0.3s;
 }
 
 nav a:hover {
   text-decoration: underline;
 }
 
+#theme-toggle {
+  border: 1px solid #ffffff;
+  background-color: transparent;
+}
+
+#theme-toggle:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+
+/* ===== 4. Hero (greeting and visitor name) ===== */
 .hero {
   padding: 60px 0;
-  background-color: #eef4ff;
+  background-color: var(--hero);
 }
 
 .hero-content {
@@ -72,7 +194,7 @@ nav a:hover {
 
 .hero h1 {
   margin-top: 5px;
-  color: #2f5da8;
+  color: var(--primary);
   font-size: 40px;
 }
 
@@ -81,29 +203,46 @@ nav a:hover {
   max-width: 40%;
 }
 
-.button,
-button {
-  display: inline-block;
-  padding: 10px 18px;
-  border: none;
-  border-radius: 5px;
-  background-color: #2f5da8;
-  color: white;
-  text-decoration: none;
-  cursor: pointer;
+.visit-message {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
 }
 
-.button:hover,
-button:hover {
-  background-color: #21457f;
+.name-form {
+  max-width: 360px;
+  margin-top: 25px;
 }
 
+.name-form label {
+  margin-top: 0;
+}
+
+.name-row {
+  display: flex;
+  gap: 8px;
+}
+
+.link-button {
+  margin-left: 12px;
+  padding: 0;
+  background-color: transparent;
+  color: var(--primary);
+  text-decoration: underline;
+}
+
+.link-button:hover {
+  background-color: transparent;
+}
+
+
+/* ===== 5. Sections and About ===== */
 .section {
   padding: 55px 0;
 }
 
 .section h2 {
-  color: #2f5da8;
+  color: var(--primary);
   font-size: 30px;
 }
 
@@ -115,355 +254,37 @@ button:hover {
   list-style: none;
 }
 
-
 .skills li {
   padding: 8px 14px;
   border-radius: 5px;
-  background-color: #dfe9fa;
+  background-color: var(--chip);
 }
 
 .student-info {
   margin-top: 25px;
   padding: 15px;
-  border-left: 4px solid #2f5da8;
-  background-color: #f5f7fa;
+  border-left: 4px solid var(--primary);
+  background-color: var(--surface);
 }
 
 .student-info p {
   margin: 5px 0;
 }
 
+
+/* ===== 6. Projects ===== */
 .projects-section {
-  background-color: #f5f7fa;
+  background-color: var(--section-alt);
 }
 
-.project-list {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 25px;
-}
-
-
-
-.project-card {
-  padding: 18px;
-  border: 1px solid #dddddd;
-  border-radius: 8px;
-  background-color: white;
-}
-
-.project-card img {
-  width: 100%;
-  border-radius: 5px;
-}
-
-.project-card h3 {
-  color: #2f5da8;
-}
-
-
-
-form {
-  max-width: 600px;
-  padding: 25px;
-  border: 1px solid #dddddd;
-  border-radius: 8px;
-  background-color: #f9f9f9;
-}
-
-label {
-  display: block;
-  margin-top: 15px;
-  margin-bottom: 5px;
-  font-weight: bold;
-}
-
-input,
-textarea {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #bbbbbb;
-  border-radius: 4px;
-  font-family: Arial, sans-serif;
-}
-
-form button {
-  margin-top: 18px;
-}
-
-#form-message {
-  color: green;
-  font-weight: bold;
-}
-
-footer {
-  padding: 20px;
-  background-color: #2f5da8;
-  color: white;
-  text-align: center;
-}
-
-
-
-
-@media (max-width: 700px) {
-  nav,
-  .hero-content {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  nav ul {
-    margin-top: 12px;
-  }
-
-  .hero h1 {
-    font-size: 32px;
-  }
-
-  .hero img {
-    max-width: 70%;
-  }
-
-  .project-list {
-    grid-template-columns: 1fr;
-  }
-}
-
-
-
-.project-controls { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; }
-#project-search { flex: 1; min-width: 200px; padding: 10px; border: 1px solid #ccc; border-radius: 8px; }
-.filter-buttons { display: flex; gap: 8px; }
-.sort-label { align-self: center; font-weight: bold; margin: 0; }
-#project-sort { padding: 10px; border: 1px solid #ccc; border-radius: 8px; font-family: Arial, sans-serif; }
-.filter-btn { background: transparent; color: inherit; border: 1px solid #ccc; }
-.filter-btn.active { background: #333; color: #fff; }
-.project-card[hidden] { display: none; }
-.empty-state { text-align: center; color: #666; padding: 20px; }
-
-
-#theme-toggle {
-  border: 1px solid white;
-  background-color: transparent;
-}
-
-#theme-toggle:hover {
-  background-color: rgba(255, 255, 255, 0.2);
-}
-
-/* ===== Dark mode ===== */
-body.dark {
-  background-color: #121826;
-  color: #e4e4e4;
-}
-
-body.dark header,
-body.dark footer {
-  background-color: #0b1020;
-}
-
-body.dark .hero,
-body.dark .projects-section {
-  background-color: #1b2333;
-}
-
-body.dark .hero h1,
-body.dark .section h2,
-body.dark .project-card h3 {
-  color: #8db4ff;
-}
-
-body.dark .project-card,
-body.dark form,
-body.dark .student-info {
-  border-color: #33405a;
-  background-color: #222c40;
-}
-
-body.dark .skills li {
-  background-color: #33405a;
-}
-
-body.dark input,
-body.dark textarea {
-  border-color: #33405a;
-  background-color: #121826;
-  color: #e4e4e4;
-}
-
-body.dark .filter-btn {
-  background-color: transparent;
-  color: #8db4ff;
-  border: 1px solid #8db4ff;
-}
-
-body.dark .filter-btn.active {
-  background-color: #8db4ff;
-  color: #121826;
-}
-
-body.dark .empty-state {
-  color: #aaaaaa;
-}
-
-@media (max-width: 700px) {
-  #theme-toggle {
-    margin-top: 12px;
-  }
-}
-
-
-
-.error {
-  margin: 4px 0 0;
-  color: #c0392b;
-  font-size: 14px;
-}
-
-#form-message {
-  opacity: 0;
-}
-
-#form-message.show {
-  animation: pop-in 0.5s forwards;
-}
-
-@keyframes pop-in {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-body.dark .error {
-  color: #ff7b6b;
-}
-
-body.dark #form-message {
-  color: #6ee28c;
-}
-
-
-
-.repo-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 12px;
-  padding: 0;
-  list-style: none;
-}
-
-.repo-list li {
-  padding: 12px 15px;
-  border-left: 4px solid #2f5da8;
-  background-color: #f5f7fa;
-}
-
-.repo-description {
-  margin: 6px 0;
-}
-
-.repo-meta {
-  margin: 0;
-  color: #666666;
-  font-size: 14px;
-}
-
-#repo-retry[hidden] {
-  display: none;
-}
-
-body.dark .repo-meta {
-  color: #aaaaaa;
-}
-
-#github > p a {
-  color: #2f5da8;
-}
-
-body.dark #github > p a {
-  color: #8db4ff;
-}
-
-.repo-list a {
-  color: #2f5da8;
-  font-weight: bold;
-}
-
-body.dark .repo-list li {
-  background-color: #222c40;
-}
-
-body.dark .repo-list a {
-  color: #8db4ff;
-}
-
-.button,
-button,
-nav a {
-  transition: background-color 0.3s, color 0.3s;
-}
-
-/* project cards move up a little on hover */
-.project-card {
-  transition: transform 0.3s, box-shadow 0.3s;
-}
-
-.project-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-}
-
-/* sections fade in when they appear on screen */
-.fade-in {
-  opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.8s, transform 0.8s;
-}
-
-.fade-in.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-/* ===== Project date and link ===== */
-.project-date {
-  margin: 0 0 8px;
-  color: #666666;
-  font-size: 14px;
-}
-
-.project-card a {
-  color: #2f5da8;
-  font-weight: bold;
-}
-
-body.dark .project-date {
-  color: #aaaaaa;
-}
-
-body.dark .project-card a {
-  color: #8db4ff;
-}
-
-body.dark #project-sort {
-  border-color: #33405a;
-  background-color: #121826;
-  color: #e4e4e4;
-}
-
-/* ===== Level picker and badges ===== */
+/* level picker (Beginner / Advanced) */
 .level-picker {
   display: flex;
   flex-wrap: wrap;
   gap: 8px 20px;
   margin: 0 0 10px;
   padding: 12px 16px;
-  border: 1px solid #cccccc;
+  border: 1px solid var(--border);
   border-radius: 8px;
 }
 
@@ -488,16 +309,99 @@ body.dark #project-sort {
 .level-message {
   margin: 0 0 20px;
   padding: 10px 14px;
-  border-left: 4px solid #2f5da8;
-  background-color: #ffffff;
+  border-left: 4px solid var(--primary);
+  background-color: var(--card);
 }
 
 .level-message.beginner {
-  border-left-color: #2e8b57;
+  border-left-color: var(--beginner);
 }
 
 .level-message.advanced {
-  border-left-color: #c0392b;
+  border-left-color: var(--advanced);
+}
+
+/* search, category buttons, and sort */
+.project-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+#project-search {
+  flex: 1;
+  min-width: 200px;
+  border-radius: 8px;
+}
+
+.filter-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.filter-btn {
+  border: 1px solid var(--primary);
+  background-color: transparent;
+  color: var(--primary);
+}
+
+.filter-btn:hover {
+  background-color: var(--chip);
+}
+
+.filter-btn.active {
+  background-color: var(--primary);
+  color: var(--on-primary);
+}
+
+.sort-label {
+  margin: 0;
+}
+
+#project-sort {
+  width: auto;
+  border-radius: 8px;
+}
+
+/* project cards */
+.project-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 25px;
+}
+
+.project-card {
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background-color: var(--card);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.project-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 20px var(--shadow);
+}
+
+.project-card img {
+  width: 100%;
+  border-radius: 5px;
+}
+
+.project-card h3 {
+  color: var(--primary);
+}
+
+.project-card a {
+  font-weight: bold;
+}
+
+.project-date {
+  margin: 0 0 8px;
+  color: var(--muted);
+  font-size: 14px;
 }
 
 .level-badge {
@@ -511,24 +415,143 @@ body.dark #project-sort {
 }
 
 .level-badge.beginner {
-  background-color: #2e8b57;
+  background-color: var(--beginner);
 }
 
 .level-badge.advanced {
-  background-color: #c0392b;
+  background-color: var(--advanced);
 }
 
-body.dark .level-picker {
-  border-color: #33405a;
+.empty-state {
+  padding: 20px;
+  color: var(--muted);
+  text-align: center;
 }
 
-body.dark .level-message {
-  background-color: #222c40;
+
+/* ===== 7. GitHub repositories ===== */
+.repo-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+  padding: 0;
+  list-style: none;
 }
 
-/* ===== Time on site timer ===== */
-.timer {
+.repo-list li {
+  padding: 12px 15px;
+  border-left: 4px solid var(--primary);
+  background-color: var(--surface);
+}
+
+.repo-list a {
+  font-weight: bold;
+  overflow-wrap: anywhere;   /* long repository names wrap instead of overflowing */
+}
+
+.repo-description {
+  margin: 6px 0;
+}
+
+.repo-meta {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+
+/* ===== 8. Forms ===== */
+#contact-form {
+  max-width: 600px;
+  padding: 25px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background-color: var(--surface);
+}
+
+label {
+  display: block;
+  margin-top: 15px;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+input,
+textarea,
+select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--input-border);
+  border-radius: 4px;
+  background-color: var(--input-bg);
+  color: var(--text);
+  font: inherit;
+}
+
+input[aria-invalid="true"],
+textarea[aria-invalid="true"] {
+  border-color: var(--error);
+}
+
+#contact-form button {
+  margin-top: 18px;
+}
+
+.error {
   margin: 4px 0 0;
+  color: var(--error);
+  font-size: 14px;
+}
+
+.message-info {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.char-count {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.char-count.near-limit {
+  color: var(--error);
+  font-weight: bold;
+}
+
+.form-hint {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+#form-message {
+  color: var(--success);
+  font-weight: bold;
+  opacity: 0;
+}
+
+#form-message.show {
+  animation: pop-in 0.5s forwards;
+}
+
+
+/* ===== 9. Footer ===== */
+footer {
+  padding: 20px;
+  background-color: var(--header);
+  color: #ffffff;
+  text-align: center;
+}
+
+footer p {
+  margin: 0;
+}
+
+.timer {
+  margin-top: 4px;
   font-size: 14px;
   opacity: 0.85;
 }
@@ -538,118 +561,89 @@ body.dark .level-message {
   font-weight: bold;
 }
 
-/* ===== Visitor name and visit message ===== */
-.visit-message {
-  margin: 0;
-  color: #555555;
-  font-size: 14px;
-}
 
-/* override the general form style used by the contact form */
-.name-form {
-  max-width: 360px;
-  margin-top: 25px;
-  padding: 0;
-  border: none;
-  background-color: transparent;
-}
-
-.name-form[hidden],
-.link-button[hidden] {
-  display: none;
-}
-
-.name-form label {
-  margin-top: 0;
-}
-
-.name-row {
-  display: flex;
-  gap: 8px;
-}
-
-.name-row button {
-  margin-top: 0;
-}
-
-.link-button {
-  margin-left: 12px;
-  padding: 0;
-  background-color: transparent;
-  color: #2f5da8;
-  text-decoration: underline;
-}
-
-.link-button:hover {
-  background-color: transparent;
-}
-
-body.dark .visit-message {
-  color: #aaaaaa;
-}
-
-body.dark .link-button {
-  color: #8db4ff;
-}
-
-@media (max-width: 700px) {
-  .name-form {
-    margin-left: auto;
-    margin-right: auto;
+/* ===== 10. Animations ===== */
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-/* ===== Contact form extras ===== */
-.message-info {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
+/* sections fade in when they appear on screen.
+   The "js" class is added in <head>, so without JavaScript nothing is hidden. */
+.js .fade-in {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s, transform 0.8s;
 }
 
-.char-count {
-  margin: 4px 0 0;
-  color: #666666;
-  font-size: 14px;
-  white-space: nowrap;
+.js .fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
-.char-count.near-limit {
-  color: #c0392b;
-  font-weight: bold;
+/* respect visitors who turned off animations in their system settings */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .js .fade-in {
+    opacity: 1;
+    transform: none;
+  }
 }
 
-.form-hint {
-  margin: 8px 0 0;
-  color: #666666;
-  font-size: 14px;
-}
 
-input[aria-invalid="true"],
-textarea[aria-invalid="true"] {
-  border-color: #c0392b;
-}
+/* ===== 11. Responsive ===== */
+@media (max-width: 700px) {
+  nav,
+  .hero-content {
+    flex-direction: column;
+    text-align: center;
+  }
 
-button:disabled,
-button:disabled:hover {
-  background-color: #9aa9c4;
-  cursor: not-allowed;
-}
+  nav ul {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px 20px;
+  }
 
-body.dark .char-count,
-body.dark .form-hint {
-  color: #aaaaaa;
-}
+  .hero h1 {
+    font-size: 32px;
+  }
 
-body.dark .char-count.near-limit {
-  color: #ff7b6b;
-}
+  .hero img {
+    max-width: 70%;
+  }
 
-body.dark input[aria-invalid="true"],
-body.dark textarea[aria-invalid="true"] {
-  border-color: #ff7b6b;
-}
+  .name-form {
+    margin-right: auto;
+    margin-left: auto;
+    text-align: left;
+  }
 
-body.dark button:disabled {
-  background-color: #33405a;
-  color: #888888;
+  .project-list {
+    grid-template-columns: 1fr;
+  }
+
+  .filter-buttons {
+    flex: 1 1 100%;
+  }
+
+  .filter-btn {
+    flex: 1;
+  }
 }
